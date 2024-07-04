@@ -2,7 +2,6 @@ $controller = Read-Host "Escribe el nombre para el Controlador"
 
 Clear-Host
 
-# Función para mostrar el menú y capturar las selecciones del usuario
 function Show-Menu {
     param (
         [string[]]$options
@@ -11,7 +10,6 @@ function Show-Menu {
     $selections = @()
     $selectedIndex = 0
 
-    # Bucle para capturar las selecciones del usuario
     while ($true) {
         Clear-Host
         Write-Host "Selecciona una o varias opciones (usa la barra espaciadora para seleccionar y Enter para finalizar):"
@@ -31,7 +29,6 @@ function Show-Menu {
             }
         }
         
-        # Capturar la tecla presionada por el usuario
         $key = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
         switch ($key.VirtualKeyCode) {
             13 { return $selections | Sort-Object } # Enter key
@@ -52,7 +49,6 @@ function Show-Menu {
     }
 }
 
-# Definir las opciones del menú
 $options = @(
     "GET",
     "PUT",
@@ -60,12 +56,10 @@ $options = @(
     "DELETE"
 )
 
-# Mostrar el menú y capturar las selecciones del usuario
 $selectedIndices = Show-Menu -options $options
 
-# Mostrar las opciones seleccionadas
 Clear-Host
- "Has seleccionado las siguientes opciones para el controlador "
+ "Se van a crear las siguientes opciones"
 
 Write-Host " --> $controller <--" -ForegroundColor blue 
 
@@ -75,10 +69,8 @@ foreach ($index in $selectedIndices) {
     $selectedOptions += $options[$index]
 }
 
-Write-Host "Si quieres crearlos pulsa cualquier tecla para continuar, en caso que no quiera pulse ctrl + c"
+Write-Host "Pulsa cualquier tecla para continuar, en caso contrario ctrl + c" -ForegroundColor yellow
 $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
-
-#Creando Directorios y archivos
 
 #ClasssNames
 $controllerClass = $controller + "Controller" 
@@ -107,7 +99,7 @@ $PostCommandUsing = ""
 $deleteCommandUsing = ""
 $PutCommandUsing = ""
 
-#ExtraControllerData
+#Endpoints
 $getEndpoint = ""
 $postEndpoint = ""
 $putEndpoint = ""
@@ -135,14 +127,14 @@ if($selectedOptions.Contains("GET") -or $selectedOptions.Contains("POST") -or $s
     Set-Content -Path $responseFilePath -Value $responseFileData
 }
 
-#Building 
+#Building app
 if($selectedOptions.Contains("GET"))
 {
     #Adding extra data
     $GetCommandUsing = "using $currentDirectory.Application.Features.$Controller.Get;"
     
     $getEndpoint = "[HttpGet]
-     public async Task<IActionResult> Get$Controller(CancellationToken ct) `n` 
+     public async Task<IActionResult> Get$Controller(CancellationToken ct)
      {
         $GetCommandClass query = new ();
         return Ok(await _mediator.Send(query, ct));
@@ -184,7 +176,7 @@ if($selectedOptions.Contains("POST"))
     $PostCommandUsing = "using $currentDirectory.Application.Features.$Controller.Create;"
     
     $postEndpoint = "[HttpPost]
-     public async Task<IActionResult> Create$Controller(CancellationToken ct) `n` 
+     public async Task<IActionResult> Create$Controller(CancellationToken ct) 
      {
         $postCommandClass command = new ();
         return Ok(await _mediator.Send(command, ct));
@@ -270,7 +262,7 @@ if($selectedOptions.Contains("PUT"))
     $PutCommandUsing = "using $currentDirectory.Application.Features.$Controller.Update;"
     
     $putEndpoint = "[HttpPut]
-     public async Task<IActionResult> Update$Controller(CancellationToken ct) `n` 
+     public async Task<IActionResult> Update$Controller(CancellationToken ct)
      {
         $putCommandClass command = new ();
         return Ok(await _mediator.Send(command, ct));
