@@ -1,5 +1,5 @@
 $controller = Read-Host "Escribe el nombre para el Controlador"
-
+$controller = $controller.Substring(0,1).ToUpper() + $controller.Substring(1)
 Clear-Host
 
 function Show-Menu {
@@ -56,6 +56,7 @@ $options = @(
     "DELETE"
 )
 
+
 $selectedIndices = Show-Menu -options $options
 
 Clear-Host
@@ -70,7 +71,7 @@ foreach ($index in $selectedIndices) {
 }
 
 Write-Host "Pulsa cualquier tecla para continuar, en caso contrario ctrl + c" -ForegroundColor yellow
-$Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+$Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown") > $null
 
 #ClasssNames
 $controllerClass = $controller + "Controller" 
@@ -106,8 +107,12 @@ $putEndpoint = ""
 $deleteEndpoint = ""
 
 #Creating Directory
-New-Item -Path $controllerPath -ItemType Directory
-New-Item -Path $MediatorPath -ItemType Directory
+New-Item -Path $controllerPath -ItemType Directory > $null
+
+if($selectedOptions.Contains("GET") -or $selectedOptions.Contains("POST") -or $selectedOptions.Contains("PUT") -or $selectedOptions.Contains("DELETE"))
+{
+    New-Item -Path $MediatorPath -ItemType Directory > $null
+}
 
 $controllerFilePath = ".\$currentDirectory.Api\Features\$controller\$controllerClass.cs"
 
@@ -124,7 +129,7 @@ if($selectedOptions.Contains("GET") -or $selectedOptions.Contains("POST") -or $s
 
                 }"
 
-    Set-Content -Path $responseFilePath -Value $responseFileData
+    Set-Content -Path $responseFilePath -Value $responseFileData > $null
 }
 
 #Building app
@@ -144,7 +149,7 @@ if($selectedOptions.Contains("GET"))
     #GET HANDLER
 
     $getMediatorPath = ".\$currentDirectory.Application\Features\$controller\Get"
-    New-Item -Path $getMediatorPath -ItemType Directory 
+    New-Item -Path $getMediatorPath -ItemType Directory > $null
     $MediatorFilePath = ".\$currentDirectory.Application\Features\$controller\Get\$GetCommandClass.cs"
 
     $GetData = "using MediatR;
@@ -167,7 +172,7 @@ public class $GetCommandHandlerClass : IRequestHandler<$GetCommandClass,$mediato
 
     "
 
-    Set-Content -Path $MediatorFilePath -Value $GetData
+    Set-Content -Path $MediatorFilePath -Value $GetData > $null
 }
 
 if($selectedOptions.Contains("POST"))
@@ -186,7 +191,7 @@ if($selectedOptions.Contains("POST"))
     #HANDLER
 
     $postMediatorPath = ".\$currentDirectory.Application\Features\$controller\Create"
-    New-Item -Path $postMediatorPath -ItemType Directory 
+    New-Item -Path $postMediatorPath -ItemType Directory > $null
 
     $MediatorFilePath = ".\$currentDirectory.Application\Features\$controller\Create\$postCommandClass.cs"
 
@@ -210,7 +215,7 @@ public class $postCommandHandlerClass : IRequestHandler<$postCommandClass,$media
 
     "
 
-    Set-Content -Path $MediatorFilePath -Value $Data
+    Set-Content -Path $MediatorFilePath -Value $Data > $null
 }
 
 if($selectedOptions.Contains("DELETE"))
@@ -229,7 +234,7 @@ if($selectedOptions.Contains("DELETE"))
     #HANDLER
 
     $deleteMediatorPath = ".\$currentDirectory.Application\Features\$controller\Delete"
-    New-Item -Path $deleteMediatorPath -ItemType Directory 
+    New-Item -Path $deleteMediatorPath -ItemType Directory > $null
 
     $MediatorFilePath = ".\$currentDirectory.Application\Features\$controller\Delete\$deleteCommandClass.cs"
 
@@ -253,7 +258,7 @@ public class $deleteCommandHandlerClass : IRequestHandler<$deleteCommandClass,bo
 
     "
 
-    Set-Content -Path $MediatorFilePath -Value $Data
+    Set-Content -Path $MediatorFilePath -Value $Data > $null
 }
 
 if($selectedOptions.Contains("PUT"))
@@ -271,7 +276,7 @@ if($selectedOptions.Contains("PUT"))
    
     #HANDLER
     $putMediatorPath = ".\$currentDirectory.Application\Features\$controller\Update"
-    New-Item -Path $putMediatorPath -ItemType Directory 
+    New-Item -Path $putMediatorPath -ItemType Directory > $null
 
     $MediatorFilePath = ".\$currentDirectory.Application\Features\$controller\Update\$putCommandClass.cs"
 
@@ -295,7 +300,7 @@ public class $putCommandHandlerClass : IRequestHandler<$putCommandClass,$mediato
 
     "
 
-    Set-Content -Path $MediatorFilePath -Value $Data
+    Set-Content -Path $MediatorFilePath -Value $Data > $null
 }
 
 $controllerData = "
@@ -331,6 +336,51 @@ public class $controllerClass : BaseApiController
 
  "
 
-Set-Content -Path $controllerFilePath -Value $controllerData
+Set-Content -Path $controllerFilePath -Value $controllerData > $null
 
+Clear-Host
+
+Write-Host "Ok!" -ForegroundColor green
+
+Write-Host "-- $controllerPath D"
+Write-Host "  -- $controllerClass.cs"
+
+if($selectedOptions.Contains("GET") -or $selectedOptions.Contains("POST") -or $selectedOptions.Contains("PUT") -or $selectedOptions.Contains("DELETE"))
+{
+    Write-Host ""
+    Write-Host "-- $MediatorPath D"
+}
+
+if($selectedOptions.Contains("POST"))
+{
+    Write-Host "  -- Create D"
+    Write-Host "    -- $postCommandClass.cs"
+    Write-Host "    -- $postCommandHandlerClass.cs"
+}
+
+if($selectedOptions.Contains("DELETE"))
+{
+    Write-Host "  -- Delete D"
+    Write-Host "    -- $deleteCommandClass.cs"
+    Write-Host "    -- $deleteCommandHandlerClass.cs"   
+}
+
+if($selectedOptions.Contains("GET"))
+{
+    Write-Host "  -- Get D"
+    Write-Host "    -- $GetCommandClass.cs"
+    Write-Host "    -- $GetCommandHandlerClass.cs"
+}
+
+if($selectedOptions.Contains("PUT"))
+{
+    Write-Host "  -- Update D"
+    Write-Host "    -- $putCommandClass.cs"
+    Write-Host "    -- $putCommandHandlerClass.cs"   
+}
+
+if($selectedOptions.Contains("GET") -or $selectedOptions.Contains("POST") -or $selectedOptions.Contains("PUT"))
+{
+    Write-Host "  -- $mediatorResponseClass.cs"
+}
 
