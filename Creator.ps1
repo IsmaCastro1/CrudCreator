@@ -162,11 +162,16 @@ public class $GetCommandClass : IRequest<$mediatorResponseClass>
 {
 }
 
-public class $GetCommandHandlerClass : IRequestHandler<$GetCommandClass,$mediatorResponseClass>
+internal class $GetCommandHandlerClass : IRequestHandler<$GetCommandClass,$mediatorResponseClass>
 {
-    public Task<$mediatorResponseClass> Handle($GetCommandClass request, CancellationToken ct)
+    public $GetCommandHandlerClass()
     {
-	    return Task.FromResult(new $mediatorResponseClass());
+    
+    }
+    
+    public async Task<$mediatorResponseClass> Handle($GetCommandClass request, CancellationToken ct)
+    {
+	    return new $mediatorResponseClass();
     }
 }
 
@@ -212,9 +217,9 @@ internal class $postCommandHandlerClass : IRequestHandler<$postCommandClass,$med
     
     }
     
-    public Task<$mediatorResponseClass> Handle($postCommandClass request, CancellationToken ct)
+    public async Task<$mediatorResponseClass> Handle($postCommandClass request, CancellationToken ct)
     {
-	    return Task.FromResult(new $mediatorResponseClass());
+	    return new $mediatorResponseClass();
     }
 }
 
@@ -253,11 +258,16 @@ public class $deleteCommandClass : IRequest<bool>
 {
 }
 
-public class $deleteCommandHandlerClass : IRequestHandler<$deleteCommandClass,bool>
+internal class $deleteCommandHandlerClass : IRequestHandler<$deleteCommandClass,bool>
 {
-    public Task<bool> Handle($deleteCommandClass request, CancellationToken ct)
+    public $deleteCommandHandlerClass()
     {
-	    return Task.FromResult(true);
+    
+    }   
+    
+    public async Task<bool> Handle($deleteCommandClass request, CancellationToken ct)
+    {
+	    return true;
     }
 }
 
@@ -297,9 +307,14 @@ public class $putCommandClass : IRequest<$mediatorResponseClass>
 
 public class $putCommandHandlerClass : IRequestHandler<$putCommandClass,$mediatorResponseClass>
 {
-    public Task<$mediatorResponseClass> Handle($putCommandClass request, CancellationToken ct)
+    public $putCommandHandlerClass()
     {
-	     return Task.FromResult(new $mediatorResponseClass());
+    
+    }
+
+    public async Task<$mediatorResponseClass> Handle($putCommandClass request, CancellationToken ct)
+    {
+	     return new $mediatorResponseClass();
     }
 }
 
