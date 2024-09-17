@@ -205,8 +205,13 @@ public class $postCommandClass : IRequest<$mediatorResponseClass>
 {
 }
 
-public class $postCommandHandlerClass : IRequestHandler<$postCommandClass,$mediatorResponseClass>
+internal class $postCommandHandlerClass : IRequestHandler<$postCommandClass,$mediatorResponseClass>
 {
+    public $postCommandHandlerClass()
+    {
+    
+    }
+    
     public Task<$mediatorResponseClass> Handle($postCommandClass request, CancellationToken ct)
     {
 	    return Task.FromResult(new $mediatorResponseClass());
